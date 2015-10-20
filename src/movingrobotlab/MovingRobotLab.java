@@ -26,9 +26,9 @@ public class MovingRobotLab
     
     public static void launchSingleRobot()
     {
-        //MovingRobot mr = new MovingRobot( "Dave", 200, 400, Color.BLUE, Color.RED );
-        //MovingRobotView cv = new MovingRobotView();
-        //new CVMProgram( "Moving Robot", 800, 600, cv, cv, mr ).start();
+        MovingRobot mr = new MovingRobot( "Dave", 200, 400, Color.BLUE, Color.RED );
+        MovingRobotView cv = new MovingRobotView();
+        new CVMProgram( "Moving Robot", 800, 600, cv, cv, mr ).start();
     }
     
     public static void launchMultiRobot()

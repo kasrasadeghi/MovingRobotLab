@@ -35,6 +35,11 @@ public class MovingRobot
         this.torsoColor = torsoColor;
         this.legColor = legColor;
         
+        rightArmAngle = 0;
+        leftArmAngle = 0;
+        leftUp = false;
+        rightUp = false;
+        
         measures[0] = (4*h)/10;  //leg & torso height
         measures[1] = h/10;      //pelvis and head height
         measures[2] = (7*w)/10;  //shoulder width

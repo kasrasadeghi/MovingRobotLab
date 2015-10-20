@@ -44,19 +44,33 @@ public class MovingRobotView extends DefaultControl<MovingRobot> implements View
     // paints the torso
     private void paintTorso( MovingRobot mr, Graphics g, int w, int h )
     {
-        
+        int cx = w/2;
+        int cy = h/2;
+        int[] m = mr.getMeasures();
+        g.setColor(mr.getTorsoColor());
+        int[] xpoints = {cx - m[3]/2, cx + m[3]/2, cx + m[2]/2, cx + m[2]/2, cx - m[2]/2, cx - m[2]/2 };
+        int[] ypoints = {cy         , cy         ,cy-m[0]+m[4], cy - m[0]  , cy - m[0]  , cy-m[0]+m[4]};
+        g.fillPolygon(xpoints, ypoints, 6);
+        g.drawPolygon(xpoints, ypoints, 6);
     }
     
     // paints the pelvis
     private void paintPelvis( MovingRobot mr, Graphics g, int w, int h )
     {
-        
+        g.setColor(mr.getLegColor());
+        int[] m = mr.getMeasures();
+        int cx = w/2;
+        int cy = h/2;
+        g.fillRect(cx - m[3]/2, cy, m[3], m[1]);
     }
     
     // paints the arms
     private void paintArms( MovingRobot mr, Graphics g, int w, int h )
     {
         
+        int tlxr = w/2 - m[2]/2;
+        int tlxl = w/2
+        int tly
     }
     
     // paints the legs
@@ -80,8 +94,18 @@ public class MovingRobotView extends DefaultControl<MovingRobot> implements View
     // angle - the angle, in radians to rotate the rectangle.
     private static void paintRotatedRectangle( Graphics g, Color c, int ULCx, int ULCy, int width, int height, int cOffX, int cOffY, double angle )
     {
+        BufferedImage bi = new BufferedImage( width + 1, height + 1, BufferedImage.TYPE_4BYTE_ABGR );
+        Graphics g2 = bi.createGraphics();
         
+        g2.setColor( c );
+        g2.fillRect( 0, 0, width, height );
+        g2.setColor( Color.BLACK );
+        g2.drawRect( 0, 0, width, height );
         
+        AffineTransform at = AffineTransform.getTranslateInstance( ULCx, ULCy);
+        at.concatenate( AffineTransform.getRotateInstance( -angle, cOffX, cOffY ) );
+        Graphics2D g2D = (Graphics2D)g;
+        g2D.drawImage( bi, at, null );
     }
     
     // handles keyboard input.
