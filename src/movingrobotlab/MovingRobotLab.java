@@ -20,8 +20,8 @@ public class MovingRobotLab
      */
     public static void main(String[] args)
     {
-        launchSingleRobot();
-        //launchMultiRobot();
+//        launchSingleRobot();
+        launchMultiRobot();
     }
     
     public static void launchSingleRobot()
@@ -34,9 +34,9 @@ public class MovingRobotLab
     public static void launchMultiRobot()
     {
         MovingRobot [] marr = new MovingRobot[3];
-        //marr[0] = new MovingRobot( "Al", 100, 200, Color.PINK, Color.ORANGE );
-        //marr[1] = new MovingRobot( "Beth", 200, 400, Color.GREEN, Color.GRAY );
-        //marr[2] = new MovingRobot( "Cam", 290, 200, Color.YELLOW, Color.MAGENTA );
+        marr[0] = new MovingRobot( "Al", 100, 200, Color.PINK, Color.ORANGE );
+        marr[1] = new MovingRobot( "Beth", 200, 400, Color.GREEN, Color.GRAY );
+        marr[2] = new MovingRobot( "Cam", 290, 200, Color.YELLOW, Color.MAGENTA );
         
         MovingRobotsView cv = new MovingRobotsView();
         new CVMProgram( "Moving Robots", 900, 600, cv, cv, marr ).start();

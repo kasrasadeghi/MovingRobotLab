@@ -9,6 +9,7 @@ import apcscvm.DefaultControl;
 import apcscvm.GraphicsUtilityFunctions;
 import apcscvm.View;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -38,7 +39,14 @@ public class MovingRobotView extends DefaultControl<MovingRobot> implements View
     // paints the head
     private void paintHead( MovingRobot mr, Graphics g, int w, int h )
     {
+        int[] m = mr.getMeasures();
+        int cx = w/2;
+        int cy = h/2;
         
+        g.setColor(mr.getLegColor());
+        g.fillRect(cx - m[7]/2, cy-m[0]-m[1], m[7], m[1]);
+        g.setColor(Color.BLACK);
+        g.drawRect(cx - m[7]/2, cy-m[0]-m[1], m[7], m[1]);
     }
     
     // paints the torso
@@ -51,6 +59,7 @@ public class MovingRobotView extends DefaultControl<MovingRobot> implements View
         int[] xpoints = {cx - m[3]/2, cx + m[3]/2, cx + m[2]/2, cx + m[2]/2, cx - m[2]/2, cx - m[2]/2 };
         int[] ypoints = {cy         , cy         ,cy-m[0]+m[4], cy - m[0]  , cy - m[0]  , cy-m[0]+m[4]};
         g.fillPolygon(xpoints, ypoints, 6);
+        g.setColor(Color.BLACK);
         g.drawPolygon(xpoints, ypoints, 6);
     }
     
@@ -62,27 +71,75 @@ public class MovingRobotView extends DefaultControl<MovingRobot> implements View
         int cx = w/2;
         int cy = h/2;
         g.fillRect(cx - m[3]/2, cy, m[3], m[1]);
+        g.setColor(Color.BLACK);
+        g.drawRect(cx - m[3]/2, cy, m[3], m[1]);
     }
     
     // paints the arms
     private void paintArms( MovingRobot mr, Graphics g, int w, int h )
     {
-        
-        int tlxr = w/2 - m[2]/2;
-        int tlxl = w/2
-        int tly
+        int [] m = mr.getMeasures();
+        int tlxr = w/2 + m[2]/2;
+        int tlxl = w/2 - m[2]/2 - m[4];
+        int tly = h/2 - m[0];
+        //paint right arm
+        paintRotatedRectangle(g, mr.getTorsoColor(), tlxr, tly, m[4], m[5], 0, m[4]/2, Math.PI*mr.getRightArmAngle()/180);
+        //paint left arm
+        paintRotatedRectangle(g, mr.getTorsoColor(), tlxl, tly, m[4], m[5], m[4], m[4]/2, -Math.PI*mr.getLeftArmAngle()/180);
     }
     
     // paints the legs
     private void paintLegs( MovingRobot mr, Graphics g, int w, int h )
     {
+        int[] m = mr.getMeasures();
+        int cx = w/2;
+        int cy = h/2;
         
+        if(!mr.isRightUp()){
+            g.setColor(mr.getLegColor());
+            g.fillRect(cx + m[6]/2, cy + m[1], m[6], m[0]);
+            g.setColor(Color.BLACK);
+            g.drawRect(cx + m[6]/2, cy + m[1], m[6], m[0]);
+        } else {
+            g.setColor(mr.getLegColor());
+            g.fillRect(cx + m[6]/2, cy + m[1], m[0]/2, m[6]);
+            g.setColor(Color.BLACK);
+            g.drawRect(cx + m[6]/2, cy + m[1], m[0]/2, m[6]);
+            g.setColor(mr.getLegColor());
+            g.fillRect(cx + m[6]/2 + m[0]/2 - m[6], cy + m[1] + m[6], m[6], m[0]/2);
+            g.setColor(Color.BLACK);
+            g.drawRect(cx + m[6]/2 + m[0]/2 - m[6], cy + m[1] + m[6], m[6], m[0]/2);
+        }
+        if(!mr.isLeftUp()){
+            g.setColor(mr.getLegColor());
+            g.fillRect(cx - 3 * m[6]/2, cy + m[1], m[6], m[0]);
+            g.setColor(Color.BLACK);
+            g.drawRect(cx - 3 * m[6]/2, cy + m[1], m[6], m[0]);
+        } else {
+            g.setColor(mr.getLegColor());
+            g.fillRect(cx - 3 * m[6]/2 - m[0]/2 + m[6], cy + m[1], m[0]/2, m[6]);
+            g.setColor(Color.BLACK);
+            g.drawRect(cx - 3 * m[6]/2 - m[0]/2 + m[6], cy + m[1], m[0]/2, m[6]);
+            g.setColor(mr.getLegColor());
+            g.fillRect(cx + m[6]/2 - m[0]/2 - m[6], cy + m[1] + m[6], m[6], m[0]/2);
+            g.setColor(Color.BLACK);
+            g.drawRect(cx + m[6]/2 - m[0]/2 - m[6], cy + m[1] + m[6], m[6], m[0]/2);
+        }
     }
     
     // paints the name tag
     private void paintNameTag( MovingRobot mr, Graphics g, int w, int h )
     {
+        int[] m = mr.getMeasures();
+        int cx = w/2;
+        int cy = h/2-m[0]+m[9];
         
+        g.setColor(Color.WHITE);
+        g.fillRect(cx, cy, m[8], m[9]);
+        g.setColor(Color.BLACK);
+        g.drawRect(cx, cy, m[8], m[9]);
+        Font font = GraphicsUtilityFunctions.getFont(m[9]);
+        GraphicsUtilityFunctions.drawStringWithFontInRectangle(g, mr.getName(), font, cx, cy, m[8], m[9]);
     }
     
     // paints a rotated rectangle outlined in black
@@ -109,8 +166,24 @@ public class MovingRobotView extends DefaultControl<MovingRobot> implements View
     }
     
     // handles keyboard input.
+    @Override
     public void handleKeyPress( MovingRobot mr, int ea, KeyEvent ke )
     {
-        
+        if (ke.getKeyCode() == KeyEvent.VK_I)
+            mr.raiseRightArm();
+        if (ke.getKeyCode() == KeyEvent.VK_K)
+            mr.lowerRightArm();
+        if (ke.getKeyCode() == KeyEvent.VK_W)
+            mr.raiseLeftArm();
+        if (ke.getKeyCode() == KeyEvent.VK_S)
+            mr.lowerLeftArm();
+        if (ke.getKeyCode() == KeyEvent.VK_U)
+            mr.raiseRightLeg();
+        if (ke.getKeyCode() == KeyEvent.VK_J)
+            mr.lowerRightLeg();
+        if (ke.getKeyCode() == KeyEvent.VK_Q)
+            mr.raiseLeftLeg();
+        if (ke.getKeyCode() == KeyEvent.VK_A)
+            mr.lowerLeftLeg();
     }
 }

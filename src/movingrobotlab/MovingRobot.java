@@ -72,4 +72,43 @@ public class MovingRobot
     
     // THE SETTERS OF PLYMOUTH
     // raise/lower arms/legs functions
+    public void raiseRightArm() 
+    {
+        if(rightArmAngle<180)
+            rightArmAngle++;
+    }
+    public void raiseLeftArm() 
+    {
+        if(leftArmAngle<180)
+            leftArmAngle++;
+    }
+    public void lowerRightArm() 
+    {
+        if(rightArmAngle>0)
+            rightArmAngle--;
+    }
+    public void lowerLeftArm() 
+    {
+        if(leftArmAngle>0)
+            leftArmAngle--;
+    }
+    
+    public void raiseRightLeg() 
+    {
+        if(!leftUp)
+            rightUp = true;
+    }
+    public void raiseLeftLeg()
+    {
+        if(!rightUp)
+            leftUp = true;
+    }
+    public void lowerRightLeg() 
+    {
+        rightUp = false;
+    }
+    public void lowerLeftLeg()
+    {
+        leftUp = false;
+    }
 }
